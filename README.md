@@ -29,6 +29,8 @@ Access the Google Sheet here: [https://docs.google.com/spreadsheets/d/1bB0maBAWE
 
 You should see your new image appear on the website!
 
+If you get a "Image Load Error", that means that the website you got it from doesn't allow embedding, so use a different picture!
+
 ---
 
 ## Relevant Code
