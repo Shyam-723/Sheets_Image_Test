@@ -22,10 +22,6 @@ Access the Google Sheet here: [https://docs.google.com/spreadsheets/d/1bB0maBAWE
 1.  Open the Google Sheet (`ImageTest` tab).
 2.  **Add a new row** under the existing data.
 3.  In the `Image URL` column, **paste a public, direct, and embeddable image link.**
-    * **Crucial:** Use reliable image hosts designed for embedding, such as:
-        * Images uploaded directly to this GitHub repository (e.g., `https://raw.githubusercontent.com/shyam-723/Sheets_Image_Test/main/path/to/your/image.jpeg`)
-        * Postimages.org (use the "Direct link" option)
-        * Cloudinary (free tier available)
     * **Avoid:** Imgur gallery links, Google Drive viewer links, or images copied directly from Google Image Search, as these often have hotlinking restrictions and will not display.
 4.  Optionally, add content to the `Link` and `Caption` columns for that row.
 5.  **Save the Google Sheet** (changes are auto-saved).
@@ -37,19 +33,18 @@ You should see your new image appear on the website!
 
 ## Relevant Code
 
-This section provides the core code snippets that power the dynamic functionality.
-
 ### Google Apps Script (`Code.gs`)
 
 This script runs as a web app, fetching data from your Google Sheet and serving it as a JSON array.
+The way to access this normally is under:
+Google Sheet -> Extensions -> App Scripts
+
+When you're done with the coding, you can then deploy the website, where a url is given to you. I've put that URL in the javascript section which acts as an API. 
+The code below is the Google Sheet Script that allows the webpage to read the Sheet.
 
 ```javascript
 function doGet(e) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('ImageTest'); // Ensure this is your correct sheet tab name
-
-  if (!sheet) {
-    return ContentService.createTextOutput(JSON.stringify({ error: "Sheet 'ImageTest' not found." })).setMimeType(ContentService.MimeType.JSON);
-  }
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Sheet1'); // Ensure this is your correct sheet tab name
 
   const data = sheet.getDataRange().getValues();
 
@@ -81,3 +76,4 @@ function doGet(e) {
   return ContentService.createTextOutput(JSON.stringify(carouselData))
          .setMimeType(ContentService.MimeType.JSON);
 }
+
