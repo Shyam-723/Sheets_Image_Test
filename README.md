@@ -45,6 +45,8 @@ The code below is the Google Sheet Script that allows the webpage to read the Sh
 ```javascript
 function doGet(e) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Sheet1'); // Ensure this is your correct sheet tab name
+// NOTE:
+// This isn't the Sheet name at the very top, rather the sheet at the bottom, which by default is 'SheetX'
 
   const data = sheet.getDataRange().getValues();
 
