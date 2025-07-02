@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Display from Google Sheet</title>
+    <!-- Tailwind CSS CDN for easy styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Link to your external stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div class="max-w-3xl w-full mx-auto bg-white p-6 md:p-8 rounded-xl shadow-lg">
+        <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-6">
+            Images from Google Sheet
+        </h1>
+
+        <!-- Loading indicator -->
+        <div id="loading-message" class="text-center text-blue-600 font-semibold text-lg mb-4">
+            Loading images...
+        </div>
+
+        <!-- Area where images will be displayed -->
+        <div id="image-display-area" class="flex flex-col gap-8 items-center">
+            <!-- Images will be injected here by JavaScript -->
+        </div>
+
+        <!-- Error message area -->
+        <div id="error-message" class="text-center text-red-600 font-semibold text-lg mt-4 hidden">
+            <!-- Error messages will be displayed here -->
+        </div>
+    </div>
+
+    <!-- Link to your external JavaScript file -->
+    <script src="script.js" defer></script>
+</body>
+</html>

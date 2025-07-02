@@ -1,0 +1,146 @@
+<!-- This file contains everything in a single file for
+easy access -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Display from Google Sheet</title>
+    <!-- Tailwind CSS CDN for easy styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Light gray background */
+        }
+        /* Custom styles for better visual appeal */
+        .image-card {
+            @apply bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 ease-in-out hover:scale-105;
+        }
+        .image-card img {
+            @apply w-full h-auto object-cover rounded-t-lg;
+            max-height: 400px; /* Limit image height */
+        }
+        .image-card .caption {
+            @apply p-4 text-center text-gray-700 text-lg font-medium;
+        }
+        .image-card a {
+            @apply block; /* Make the entire card clickable if there's a link */
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div class="max-w-3xl w-full mx-auto bg-white p-6 md:p-8 rounded-xl shadow-lg">
+        <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-6">
+            Images from Google Sheet
+        </h1>
+
+        <!-- Loading indicator -->
+        <div id="loading-message" class="text-center text-blue-600 font-semibold text-lg mb-4">
+            Loading images...
+        </div>
+
+        <!-- Area where images will be displayed -->
+        <div id="image-display-area" class="flex flex-col gap-8 items-center">
+            <!-- Images will be injected here by JavaScript -->
+        </div>
+
+        <!-- Error message area -->
+        <div id="error-message" class="text-center text-red-600 font-semibold text-lg mt-4 hidden">
+            <!-- Error messages will be displayed here -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const imageDisplayArea = document.getElementById('image-display-area');
+            const loadingMessage = document.getElementById('loading-message');
+            const errorMessage = document.getElementById('error-message');
+
+            // !!! IMPORTANT: Replace this with your actual deployed Google Apps Script URL !!!
+            const googleAppsScriptUrl = 'https://script.google.com/macros/s/AKfycbxK6fgsWy_X4JzudhcfV_oXyS7GrY3aTShS2vxZAZlu57IZ-8WR-AjBvhHj4ag0tyKM/exec';
+            // Function to display an error message
+            function displayError(message) {
+                loadingMessage.classList.add('hidden'); // Hide loading
+                errorMessage.textContent = `Error: ${message}`;
+                errorMessage.classList.remove('hidden'); // Show error
+            }
+
+            // Fetch data from Google Apps Script
+            fetch(googleAppsScriptUrl)
+                .then(response => {
+                    // Check if the network response was successful
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json(); // Parse the JSON response
+                })
+                .then(images => {
+                    // --- ADDED FOR DEBUGGING: Log the fetched data to console ---
+                    console.log('Fetched image data:', images);
+                    // ---------------------------------------------------------
+
+                    loadingMessage.classList.add('hidden'); // Hide loading message
+
+                    // Check if the Apps Script returned an error property
+                    if (images.error) {
+                        displayError(images.error);
+                        return;
+                    }
+
+                    // Check if no images were returned
+                    if (images.length === 0) {
+                        imageDisplayArea.innerHTML = '<p class="text-gray-600 text-center text-xl">No images found in the Google Sheet. Please add data.</p>';
+                        return;
+                    }
+
+                    // Iterate through the array of image data and create elements
+                    images.forEach(image => {
+                        const cardDiv = document.createElement('div');
+                        cardDiv.classList.add('image-card', 'w-full'); // Apply Tailwind classes for styling
+
+                        const imgElement = document.createElement('img');
+                        imgElement.src = image.imageUrl;
+                        imgElement.referrerpolicy = 'no-referrer';
+                        imgElement.alt = image.caption || 'Image from Google Sheet'; // Fallback alt text
+                        imgElement.onerror = () => {
+                            // Fallback for broken images
+                            imgElement.src = `https://placehold.co/600x400/cccccc/333333?text=Image+Load+Error`;
+                            imgElement.alt = "Image failed to load";
+                        };
+
+                        const captionElement = document.createElement('p');
+                        captionElement.classList.add('caption');
+                        captionElement.textContent = image.caption || 'No Caption';
+
+                        // If there's a link, wrap the image and caption in an anchor tag
+                        if (image.link) {
+                            const linkElement = document.createElement('a');
+                            linkElement.href = image.link;
+                            linkElement.target = "_blank"; // Open link in a new tab
+                            linkElement.rel = "noopener noreferrer"; // Security best practice for target="_blank"
+                            linkElement.appendChild(imgElement);
+                            linkElement.appendChild(captionElement); // Caption is also part of the link
+                            cardDiv.appendChild(linkElement);
+                        } else {
+                            // If no link, just append image and caption directly to the card
+                            cardDiv.appendChild(imgElement);
+                            cardDiv.appendChild(captionElement);
+                        }
+
+                        imageDisplayArea.appendChild(cardDiv);
+                    });
+                })
+                .catch(error => {
+                    // Catch any errors during the fetch operation
+                    console.error('Fetch error:', error);
+                    displayError(`Failed to load images. ${error.message}`);
+                });
+        });
+    </script>
+</body>
+</html>
