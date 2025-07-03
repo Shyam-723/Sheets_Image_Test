@@ -22,7 +22,7 @@ Access the Google Sheet here: [https://docs.google.com/spreadsheets/d/1bB0maBAWE
 1.  Open the Google Sheet (`ImageTest` tab).
 2.  **Add a new row** under the existing data.
 3.  In the `Image URL` column, **paste a public, direct, and embeddable image link.**
-    * **Avoid:** Imgur gallery links, Google Drive viewer links, or images copied directly from Google Image Search, as these often have hotlinking restrictions and will not display.
+    * **Avoid:** Imgur gallery links, Google Drive viewer links and Pinterest links.
 4.  Optionally, add content to the `Link` and `Caption` columns for that row.
 5.  **Save the Google Sheet** (changes are auto-saved).
 6.  **Refresh the live website** in your browser.
